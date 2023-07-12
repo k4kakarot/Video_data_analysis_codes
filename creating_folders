@@ -1,0 +1,21 @@
+import os
+import shutil
+
+# Define the source folder where your video files are located
+source_folder = ""
+
+# Create a new folder to store the organized files
+destination_folder = ""
+os.makedirs(destination_folder, exist_ok=True)
+
+# Iterate over the video files in the source folder
+for filename in os.listdir(source_folder):
+    if filename.endswith(".mp4") or filename.endswith(".avi"):
+        # Create a subfolder for the video file in the destination folder
+        video_folder = os.path.join(destination_folder, os.path.splitext(filename)[0])
+        os.makedirs(video_folder, exist_ok=True)
+
+        # Move the video file to the appropriate video folder
+        source_path = os.path.join(source_folder, filename)
+        destination_path = os.path.join(video_folder, filename)
+        shutil.move(source_path, destination_path)

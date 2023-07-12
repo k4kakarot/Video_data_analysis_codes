@@ -1,0 +1,55 @@
+import glob
+import os
+import cv2
+import pandas as pd
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+
+
+def main():
+    # Define the folder path where the videos are located
+
+    folder_path = 'F:/Project_data/videos'
+
+    # Use glob to get the file paths of all the video files in the folders
+    file_paths = glob.glob(os.path.join(folder_path, '*'))
+    video_paths=[]
+    print(file_paths)
+    for file_path in file_paths:
+         video_paths.extend(glob.glob(file_path + '**/*.mp4', recursive=True))
+    print(video_paths)
+
+    attributes = ['baseline', 'ATP1', 'TP1', 'AP1', 'RP1', 'ATP2', 'TP2', 'AP2', 'RP2', 'ATP3', 'AP3', 'RP3']
+    excel_path = 'C:/Users/HP/Downloads/P_119_to_151.xlsx'
+    df = pd.read_excel(excel_path)
+    df.dropna(inplace=True)
+    print(file_paths)
+    df_list = df.values.tolist()
+    print(video_paths)
+    PId=176
+    # Iterate over each video file path and load the videos
+    for video_path, row in zip(video_paths,df_list):
+        # Open the video file
+        print(video_path,row)
+        video = cv2.VideoCapture(video_path)
+
+        # Iterate over each row in the DataFrame
+        phase = 0
+        index = 0
+
+        for i in range(len(row)//2):
+
+                 video_file_name = attributes[phase]
+                 start_time = row[index + 1].hour * 3600 + row[index + 1].minute * 60 + row[index + 1].second
+                 end_time = row[index + 2].hour * 3600 + row[index + 2].minute * 60 + row[index + 2].second
+
+             # Trim the video based on the start and end times
+                 output_file_path = "F:/Project_data/videos/"+str(PId)+"/"+ str(PId) + video_file_name + ".mp4"
+                 ffmpeg_extract_subclip(video_path, start_time, end_time, targetname=output_file_path)
+                 phase = phase + 1
+                 index = index + 2
+
+        PId=PId+1
+
+
+if __name__ == '__main__':
+    main()

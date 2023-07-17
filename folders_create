@@ -1,0 +1,20 @@
+import os
+
+# Specify the directory path where you want to create the new folder
+directory = 'Z:/SAD study Data/Trimmed and Analysis Data'
+PID=164
+# Specify the name of the new folder
+for i in range(13):
+    folder_name = str(PID)
+
+# Create the full path by combining the directory path and the folder name
+    new_folder_path = os.path.join(directory, folder_name)
+
+# Check if the folder already exists
+    if not os.path.exists(new_folder_path):
+      # Create the new folder
+       os.makedirs(new_folder_path)
+       print(f"New folder '{folder_name}' created successfully.")
+    else:
+       print(f"Folder '{folder_name}' already exists.")
+    PID=PID+1
